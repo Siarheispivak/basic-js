@@ -23,9 +23,44 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper(matrix) {
+  // console.log(matrix)
+  function getCell(row, col) {
+    if (row < 0 || col < 0) { //не ушли ли мы за пределы массива
+      return 0;
+    } else if (row >= matrix.length) { // проверяем не ушли ли за пределы вправо
+      return 0;
+    } else if (col >= matrix[row].length) { // не ушли ли за пределы вниз
+      return 0;
+    } else if (matrix[row][col] === true) { // проверяем есть ли бомба
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  const matrix2 = [];
+
+  for (let row = 0; row < matrix.length; row++) {
+    matrix2.push([]);
+    for (let col = 0; col < matrix[row].length; col++) {
+      let bombs = 0;
+
+      bombs += getCell(row - 1, col - 1)  // выше и левее
+      bombs += getCell(row - 1, col)      // выше  и  на этой же колонке
+      bombs += getCell(row - 1, col + 1)  //  выше и правее
+
+      bombs += getCell(row, col - 1)    // левее
+      bombs += getCell(row, col + 1)    //правее
+
+      bombs += getCell(row + 1, col - 1) // ниже и левее
+      bombs += getCell(row + 1, col)     // ниже на этой же колонке
+      bombs += getCell(row + 1, col + 1) // ниже и правее
+
+      matrix2[row].push(bombs);
+    }
+  }
+  return matrix2;
 }
 
 module.exports = {
